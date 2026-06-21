@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react'
 import api from '../lib/api'
-
-function PartyBadge({ party }) {
-  const cls = party === 'democrat' ? 'badge-dem' : party === 'republican' ? 'badge-rep' : 'badge-ind'
-  const label = party === 'democrat' ? 'D' : party === 'republican' ? 'R' : 'I'
-  return <span className={`badge ${cls}`}>{label}</span>
-}
+import PoliticianCard from '../components/PoliticianCard'
 
 export default function Politicians() {
   const [politicians, setPoliticians] = useState([])
@@ -17,7 +12,7 @@ export default function Politicians() {
   const [offset, setOffset] = useState(0)
   const limit = 50
 
-  const fetch = async () => {
+  const fetchPoliticians = async () => {
     setLoading(true)
     const params = new URLSearchParams({ limit, offset })
     if (search) params.set('search', search)
@@ -29,7 +24,7 @@ export default function Politicians() {
     setLoading(false)
   }
 
-  useEffect(() => { fetch() }, [search, chamber, party, offset])
+  useEffect(() => { fetchPoliticians() }, [search, chamber, party, offset])
 
   const resetFilters = () => {
     setSearch('')
@@ -45,7 +40,7 @@ export default function Politicians() {
           The <span className="text-red">Players</span>
         </h1>
         <p className="text-muted" style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>
-          {total} members of the 119th Congress available to draft
+          {total} members of the 119th Congress · Click any player to expand their stats
         </p>
       </div>
 
@@ -79,18 +74,7 @@ export default function Politicians() {
         <>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
             {politicians.map(p => (
-              <div key={p.id} className="card flex items-center gap-2" style={{ padding: '0.75rem 1rem' }}>
-                <PartyBadge party={p.party} />
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>{p.title} {p.full_name}</span>
-                  <span className="text-muted" style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }}>
-                    {p.state}{p.district ? `-${p.district}` : ''}
-                  </span>
-                </div>
-                <span className="badge badge-senate">
-                  {p.chamber === 'senate' ? 'SEN' : 'REP'}
-                </span>
-              </div>
+              <PoliticianCard key={p.id} p={p} />
             ))}
           </div>
 
