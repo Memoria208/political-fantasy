@@ -111,8 +111,13 @@ export default function PoliticianCard({ p, isMyTurn, onPick }) {
   const [loadingDetail, setLoadingDetail] = useState(false)
 
   const toggleExpand = async () => {
-    console.log('clicked', p.full_name) // testing for correct outcome
-    if (!expanded && !detail) {
+    // Toggle visibility immediately so the card expands on click,
+    // independent of the network request below.
+    const willExpand = !expanded
+    setExpanded(willExpand)
+
+    // Lazy-load detail the first time the card is opened.
+    if (willExpand && !detail) {
       setLoadingDetail(true)
       try {
         const res = await api.get(`/politicians/${p.id}`)
@@ -123,7 +128,6 @@ export default function PoliticianCard({ p, isMyTurn, onPick }) {
         setLoadingDetail(false)
       }
     }
-    setExpanded(!expanded)
   }
 
   const fmt = (val, suffix = '') => val != null ? `${val}${suffix}` : '—'
@@ -238,10 +242,6 @@ export default function PoliticianCard({ p, isMyTurn, onPick }) {
                 <a href={detail.links?.bioguide} target="_blank" rel="noopener noreferrer"
                   className="btn btn-secondary" style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem' }}>
                   Biography ↗
-                </a>
-                <a href={detail.links?.congress_gov} target="_blank" rel="noopener noreferrer"
-                  className="btn btn-secondary" style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem' }}>
-                  Legislation & Votes ↗
                 </a>
                 <a href={detail.links?.ballotpedia} target="_blank" rel="noopener noreferrer"
                   className="btn btn-secondary" style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem' }}>
