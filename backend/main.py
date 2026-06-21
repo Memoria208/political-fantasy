@@ -19,7 +19,7 @@ import os
 load_dotenv()
 
 from models.database import create_tables
-from routers import auth, leagues, draft, leaderboard, politicians
+from routers import auth, leagues, draft, leaderboard, politicians, payments
 
 app = FastAPI(
     title="Political Fantasy API",
@@ -90,6 +90,7 @@ app.include_router(leagues.router)
 app.include_router(draft.router)
 app.include_router(leaderboard.router)
 app.include_router(politicians.router)
+app.include_router(payments.router)
 
 # ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
 

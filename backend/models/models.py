@@ -133,6 +133,10 @@ class League(Base):
     last_scored_at  = Column(DateTime(timezone=True))
     created_at      = Column(DateTime(timezone=True), server_default=func.now())
 
+    # Premium upgrade (set true by the Stripe webhook after payment)
+    is_premium           = Column(Boolean, default=False)
+    premium_purchased_at = Column(DateTime(timezone=True))
+
     # Relationships
     commissioner = relationship("User", back_populates="owned_leagues")
     members      = relationship("LeagueMember", back_populates="league")
@@ -255,3 +259,26 @@ class WeeklySnapshot(Base):
     __table_args__ = (
         UniqueConstraint("member_id", "week_number", "season_year"),
     )
+
+
+# ─── LEAGUE PAYMENT ───────────────────────────────────────────────────────────
+
+class LeaguePayment(Base):
+    """
+    Audit log of Stripe checkout sessions for premium league upgrades.
+    One row per checkout attempt. The unique stripe_session_id makes the
+    webhook safe to receive more than once (idempotent fulfillment).
+    """
+    __tablename__ = "league_payments"
+
+    id                    = Column(Integer, primary_key=True, index=True)
+    league_id             = Column(Integer, ForeignKey("leagues.id"), nullable=False)
+    user_id               = Column(Integer, ForeignKey("users.id"), nullable=False)
+    stripe_session_id     = Column(String(255), unique=True, nullable=False, index=True)
+    stripe_payment_intent = Column(String(255))
+    amount_cents          = Column(Integer, nullable=False)
+    currency              = Column(String(10), default="usd")
+    status                = Column(String(30), default="pending")  # pending | paid
+    season_year           = Column(Integer)
+    created_at            = Column(DateTime(timezone=True), server_default=func.now())
+    paid_at               = Column(DateTime(timezone=True))

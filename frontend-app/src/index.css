@@ -322,3 +322,109 @@ input { font-family: var(--font-body); }
 .gap-1 { gap: 0.5rem; }
 .gap-2 { gap: 1rem; }
 .w-full { width: 100%; }
+
+
+/* ─── MOBILE RESPONSIVE ──────────────────────────────────────────────────── */
+/* I had zero media queries before this — everything was desktop-only.
+   adding breakpoints for the header, nav, cards, forms, and anything
+   that would overflow or look broken on a phone */
+
+@media (max-width: 640px) {
+
+  /* header — let it wrap so the nav doesn't get crushed off screen */
+  .site-header {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
+
+  /* shrink the logo a bit so it fits next to the nav */
+  .site-logo {
+    font-size: 1.3rem;
+  }
+
+  /* tighten nav gap so all the links fit on one line */
+  .site-nav {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    font-size: 0.78rem;
+  }
+
+  .nav-btn {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  /* give the page a bit less padding on mobile */
+  .page {
+    padding: 1.25rem 0.85rem;
+  }
+
+  /* cards — tighten padding so they don't eat the whole screen */
+  .card {
+    padding: 1rem;
+  }
+
+  /* hero section — less padding on small screens */
+  .star-banner {
+    padding: 2rem 1rem;
+  }
+
+  /* hero CTA buttons — stack vertically and cap width so they look intentional */
+  .star-banner .btn {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* score number — shrink it so it doesn't overflow the row */
+  .score {
+    font-size: 1.3rem;
+  }
+
+  /* rank number — same deal */
+  .rank-number {
+    font-size: 1.5rem;
+    min-width: 2rem;
+  }
+
+  /* let flex rows wrap instead of overflowing */
+  .flex {
+    flex-wrap: wrap;
+  }
+
+  /* font-size 1rem on inputs prevents iOS from zooming in when you tap them */
+  .form-input {
+    font-size: 1rem;
+    padding: 0.75rem 0.85rem;
+  }
+
+  /* bigger tap targets on mobile */
+  .btn {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  /* tab row in league detail — scroll horizontally instead of wrapping weirdly */
+  .tab-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+}
+
+/* ─── TABLET (641–960px) ─────────────────────────────────────────────────── */
+/* not as dramatic as mobile but still needs a little tightening */
+@media (min-width: 641px) and (max-width: 960px) {
+
+  .site-header {
+    padding: 0 1rem;
+  }
+
+  .page {
+    padding: 1.5rem 1.25rem;
+  }
+}

@@ -16,9 +16,9 @@ export default function Header() {
           <>
             <Link to="/leagues" className="nav-link">My Leagues</Link>
             <Link to="/politicians" className="nav-link">Players</Link>
-            <span className="nav-link" style={{ color: 'var(--gold)' }}>
-              {user.display_name}
-            </span>
+            <Link to="/settings" className="nav-link" style={{ color: 'var(--gold)' }}>
+              {user.display_name} ⚙
+            </Link>
             <button className="nav-btn" onClick={logout}>Sign Out</button>
           </>
         ) : (

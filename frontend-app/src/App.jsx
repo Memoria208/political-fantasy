@@ -7,6 +7,7 @@ import Register from './pages/Register'
 import Leagues from './pages/Leagues'
 import LeagueDetail from './pages/LeagueDetail'
 import Politicians from './pages/Politicians'
+import Settings from './pages/Settings'
 import './index.css'
 
 function ProtectedRoute({ children }) {
@@ -32,6 +33,9 @@ function AppRoutes() {
         } />
         <Route path="/politicians" element={
           <ProtectedRoute><Politicians /></ProtectedRoute>
+        } />
+        <Route path="/settings" element={
+          <ProtectedRoute><Settings /></ProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

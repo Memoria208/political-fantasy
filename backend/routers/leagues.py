@@ -23,6 +23,25 @@ from services.auth import get_current_user
 router = APIRouter(prefix="/leagues", tags=["leagues"])
 
 
+# ─── PREMIUM TIER ─────────────────────────────────────────────────────────────
+# Free leagues cap at FREE_MAX_TEAMS. Paying for premium lifts the cap to
+# PREMIUM_MAX_TEAMS automatically — no other code needs to change because the
+# join check reads the *effective* cap below.
+
+FREE_MAX_TEAMS = 4
+PREMIUM_MAX_TEAMS = 8
+
+
+def effective_max_teams(league) -> int:
+    return PREMIUM_MAX_TEAMS if league.is_premium else FREE_MAX_TEAMS
+
+
+def require_premium(league):
+    """Guard for any premium-only feature. 402 = Payment Required."""
+    if not league.is_premium:
+        raise HTTPException(status_code=402, detail="This feature requires a premium league.")
+
+
 # ─── SCHEMAS ──────────────────────────────────────────────────────────────────
 
 class CreateLeagueRequest(BaseModel):
@@ -57,6 +76,7 @@ class LeagueResponse(BaseModel):
     draft_status: str
     season_year: int
     member_count: int
+    is_premium: bool = False
 
 
 class LeagueDetailResponse(BaseModel):
@@ -67,6 +87,8 @@ class LeagueDetailResponse(BaseModel):
     roster_size: int
     draft_status: str
     season_year: int
+    commissioner_id: int
+    is_premium: bool = False
     members: list[LeagueMemberResponse]
 
 
@@ -119,8 +141,11 @@ def join_league(
         raise HTTPException(status_code=400, detail="League draft has already started")
 
     member_count = db.query(LeagueMember).filter_by(league_id=league.id).count()
-    if member_count >= league.max_teams:
-        raise HTTPException(status_code=400, detail="League is full")
+    if member_count >= effective_max_teams(league):
+        raise HTTPException(
+            status_code=400,
+            detail="League is full (the commissioner can upgrade to premium for more teams)",
+        )
 
     existing = db.query(LeagueMember).filter_by(
         user_id=current_user.id, league_id=league.id
