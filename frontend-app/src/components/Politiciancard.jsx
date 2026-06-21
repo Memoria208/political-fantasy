@@ -111,6 +111,7 @@ export default function PoliticianCard({ p, isMyTurn, onPick }) {
   const [loadingDetail, setLoadingDetail] = useState(false)
 
   const toggleExpand = async () => {
+    console.log('clicked', p.full_name) // testing for correct outcome
     if (!expanded && !detail) {
       setLoadingDetail(true)
       try {
