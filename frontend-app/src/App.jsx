@@ -8,6 +8,7 @@ import Leagues from './pages/Leagues'
 import LeagueDetail from './pages/LeagueDetail'
 import Politicians from './pages/Politicians'
 import Settings from './pages/Settings'
+import Demo from './pages/Demo'
 import './index.css'
 
 function ProtectedRoute({ children }) {
@@ -34,6 +35,7 @@ function AppRoutes() {
         <Route path="/politicians" element={
           <ProtectedRoute><Politicians /></ProtectedRoute>
         } />
+        <Route path="/demo" element={<Demo />} />
         <Route path="/settings" element={
           <ProtectedRoute><Settings /></ProtectedRoute>
         } />

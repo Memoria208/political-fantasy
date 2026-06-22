@@ -67,6 +67,7 @@ export default function Home() {
           ) : (
             <>
               <Link to="/register" className="btn btn-primary">Start Drafting — It's Free</Link>
+              <Link to="/demo" className="btn btn-secondary">See a Live League →</Link>
               <Link to="/login" className="btn btn-secondary">Sign In</Link>
             </>
           )}
