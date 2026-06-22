@@ -18,8 +18,13 @@ from datetime import datetime, timezone
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from dotenv import load_dotenv
-load_dotenv()
+# load_dotenv only works locally — on Railway env vars are injected automatically
+# so I just skip it if the module isn't installed
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 from models.database import SessionLocal
 from models.models import (
