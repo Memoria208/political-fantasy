@@ -27,6 +27,19 @@ app = FastAPI(
     version="0.1.0",
 )
 
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",  # local dev
+        "https://political-fantasy.vercel.app",  # your production frontend
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # ─── CORS ─────────────────────────────────────────────────────────────────────
 
 ALLOWED_ORIGINS = [
