@@ -15,9 +15,7 @@ from dotenv import load_dotenv
 from collections import defaultdict
 import time
 import os
-
 load_dotenv()
-
 from models.database import create_tables
 from routers import auth, leagues, draft, leaderboard, politicians, payments
 
@@ -27,40 +25,16 @@ app = FastAPI(
     version="0.1.0",
 )
 
-
-# Add CORS middleware
+# ─── CORS ──────────────────────────────────────────────────────────────────────
+# Add CORS middleware ONCE with the correct origins
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",  # local dev
-        "https://political-fantasy.vercel.app",  # your production frontend
+        "http://localhost:3000",  # local dev alt
+        "https://political-fantasy.vercel.app",  # production
     ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# ─── CORS ─────────────────────────────────────────────────────────────────────
-
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://political-fantasy-bf654y4cz-fantasyhill.vercel.app",
-    "https://political-fantasy.vercel.app",
-]
-
-# Allow any Vercel preview URLs for this project
-ALLOWED_ORIGIN_PATTERNS = ["fantasyhill.vercel.app"]
-
-def is_allowed_origin(origin: str) -> bool:
-    if origin in ALLOWED_ORIGINS:
-        return True
-    return any(pattern in origin for pattern in ALLOWED_ORIGIN_PATTERNS)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_origin_regex=r"https://.*fantasyhill\.vercel\.app",
+    allow_origin_regex=r"https://.*\.vercel\.app",  # catch all Vercel preview URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
